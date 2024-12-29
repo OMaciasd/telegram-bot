@@ -1,0 +1,23 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      TELEGRAM_API_KEY: ${TELEGRAM_API_KEY}
+    ports:
+      - "127.0.0.1:5000:5000"  # Bind container port 5000 to localhost (127.0.0.1) only
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 30s
+      retries: 3
+      start_period: 5s
+      timeout: 10s
+    volumes:
+      - .:/app
+    env_file:
+      - .env
